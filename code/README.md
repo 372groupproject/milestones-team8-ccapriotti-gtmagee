@@ -21,3 +21,29 @@ Prints "hello, world".
 ### variables.go
 
 Example of how Go handles variable delcaration and can infer types.
+
+---
+
+### p2_for.go
+
+Example of how for loops work in Go.
+
+---
+
+### p2_if.go
+
+Example of how if-statements work in Go.
+
+---
+
+### p2_switch.go
+
+Example of how switch statements work in Go.
+
+---
+
+### p2_while.go 
+
+Example of how while loops work in Go.
+
+---
