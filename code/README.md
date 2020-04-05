@@ -54,7 +54,7 @@ Example of Go's defer statement, which executes deferred objects after a functio
 
 ---
 
-### guessingGame.go
+### p2_guessingGame.go
 
 Our "mildly useful" guessing game which uses a combination of Go's control structures.
 
