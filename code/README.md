@@ -47,3 +47,15 @@ Example of how switch statements work in Go.
 Example of how while loops work in Go.
 
 ---
+
+### p2_defer.go
+
+Example of Go's defer statement, which executes deferred objects after a function call ends.
+
+---
+
+### guessingGame.go
+
+Our "mildly useful" guessing game which uses a combination of Go's control structures.
+
+---
