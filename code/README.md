@@ -54,6 +54,12 @@ Example of Go's defer statement, which executes deferred objects after a functio
 
 ---
 
+### p2_panicAndRecover.go
+
+Example of Go's panic() and recover() functions that allow error throwing and handling
+
+---
+
 ### p2_guessingGame.go
 
 Our "mildly useful" guessing game which uses a combination of Go's control structures.
