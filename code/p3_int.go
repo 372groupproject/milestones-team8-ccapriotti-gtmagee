@@ -6,9 +6,16 @@ func main(){
 	signed()
 	unsigned()
 
-	var a int = 5
-	var b int = 6
+	var a int = 10
+	var b int = 5
+	fmt.Printf("a = %d, b = %d\n", a, b)
 	fmt.Println("a + b =", a + b)
+	fmt.Println("a - b =", a - b)
+	fmt.Println("a * b =", a * b)
+	fmt.Println("a / b =", a / b)
+
+	var myByte byte = 21
+	fmt.Printf("Byte Representation of 21: %b", myByte)
 }
 
 func signed(){
