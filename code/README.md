@@ -12,56 +12,134 @@ go run hello.go
 
 ## Descriptions
 
-### hello.go
+### p1
+
+#### hello.go
 
 Prints "hello, world".
 
 ---
 
-### variables.go
+#### variables.go
 
 Example of how Go handles variable delcaration and can infer types.
 
 ---
 
-### p2_for.go
+### p2
+
+#### p2_for.go
 
 Example of how for loops work in Go.
 
 ---
 
-### p2_if.go
+#### p2_if.go
 
 Example of how if-statements work in Go.
 
 ---
 
-### p2_switch.go
+#### p2_switch.go
 
 Example of how switch statements work in Go.
 
 ---
 
-### p2_while.go 
+#### p2_while.go 
 
 Example of how while loops work in Go.
 
 ---
 
-### p2_defer.go
+#### p2_defer.go
 
 Example of Go's defer statement, which executes deferred objects after a function call ends.
 
 ---
 
-### p2_panicAndRecover.go
+#### p2_panicAndRecover.go
 
 Example of Go's panic() and recover() function calls that allow error throwing and handling.
 
 ---
 
-### p2_guessingGame.go
+#### p2_guessingGame.go
 
 Our "mildly useful" guessing game which uses a combination of Go's control structures.
+
+---
+
+### p3
+
+#### p3_array.go	
+
+Example of how the array data type is initialized and indexed.
+
+---
+
+#### p3_bool.go	
+
+Example with boolean type declarations and logical operators.
+
+---
+
+#### p3_byte.go	
+
+Example of the byte type using an array of ASCII values.
+
+---
+
+#### p3_compileTimeError.go	
+
+Quick example of a compile time error in Go.
+
+---
+
+#### p3_float.go	
+
+Example of a float data type declaration and some floating point arithmetic.
+
+---
+
+#### p3_int.go	
+
+Example of the various int types Go offers; including unsigned, signed, and explicit bit delcarations.
+
+---
+
+#### p3_map.go
+
+Example of Go's map structure.
+
+---
+
+#### p3_runtimeError.go
+
+Quick example of a runtime error in Go.
+
+---
+
+#### p3_slice.go	
+
+Example of Go's slice type along with some slicing operations.
+
+---
+
+#### p3_string.go
+
+Example of a string declaration in Go, along with some string specific operations.
+
+---
+
+#### p3_struct.go
+
+Example of structs in Go.
+
+---
+
+#### p3_ticTacToe.go
+
+A console based tic-tac-toe game created usign a combination of Go's data types. 
 
 ---
