@@ -1,0 +1,11 @@
+For our program, we're thinking about creating a simple chat application. 
+
+We're unsure about specifics, such as whether we're wanting to design a messaging app (between 2 people) or more of a chatroom where many people can join in on the conversation.
+
+We expect the program to consistent of client/server code, require some sort of front-end, and require some sort of socketing API.
+
+The program will hopefully be around 300-500 lines of code, though we may be underestimating the difficulty.
+
+We wanted to build a project that suits Go's strengths, and a project involving networking is just that.
+
+The project may need some HTML/CSS/JS for the front-end, that's yet to be determined. The entire backend will be backed by Go.
