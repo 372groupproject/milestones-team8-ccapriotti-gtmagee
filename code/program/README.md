@@ -1,4 +1,4 @@
-To run this program, do the following on the command line in the same folder as chatServer.go
+To run this program, do the following on the command line in the same folder as chatServer.go:
 
 go run chatServer.go
 
