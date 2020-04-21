@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Oatmeal Lite</title>
+		<script>
+			(function() {
+				var username;
+
+				function enterChatRooms(){
+					let possName = document.getElementById("nameinput").value;
+					if (possName != ""){
+						username = possName;
+						currRoom = "general"
+						document.getElementById("signin").style.display = "none";
+						document.getElementById("chatmain").style.display = "block";
+					}
+				}
+
+				function getUsers(){
+					fetch("http://localhost:3000?mode=roomusers").then(checkStatus)
+						.then(function(responseText){
+							//successfully received data
+							let allComments = JSON.parse(responseText)["messages"];
+						})
+						.catch(function(error){//error
+						});
+				}
+
+				function checkStatus(response){
+					if (response.status >= 200 && response.status < 300){
+						return response.text();
+					}else{
+						return Promise.reject(new Error(response.status + ":" + response.statusText));
+					}
+				}
+
+				window.onload = function(){
+					document.getElementById("submitname").onclick = enterChatRooms;
+					document.getElementById("nameinput").onkeypress = function(event){
+						if (event.keyCode == 13){
+							enterChatRooms();
+						}
+					}
+				};
+			})();
+		</script>
+		<style>
+			.hidden {
+				display: none;
+			}
+
+			.shown {
+				display: block;
+			}
+
+			body {
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="signin" class="shown">
+			<label>Name: <input type="text" id="nameinput" /></label>
+			<button id="submitname">Get Started!</button>
+		</div>
+		<div id="chatmain" class="hidden">
+			<h1>Welcome to the Discussion</h1>
+			<h2>Currently in Chat Room: </h2>
+			<div id="users">
+				<div id="roomusers">
+					<h3>Users in Room: </h3>
+					<ul id="roomlist">
+					</ul>
+				</div>
+				<div id="allusers">
+					<h3>All Users Online: </h3>
+					<ul id="alllist">
+					</ul>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
