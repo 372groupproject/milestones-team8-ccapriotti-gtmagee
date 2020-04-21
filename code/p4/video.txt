@@ -1,0 +1,25 @@
+*Theme
+	->Overall purpose of what Go is used for (Servers and Concurrency)
+	->General ideas of how syntax looks without going into too much detail
+	->Presentation of important Go features like concurrency and server creation
+	->General overview, only going into specifics on interesting topics unique to Go
+*Ideas
+	->Concurrency is a key concept made easy in Go
+	->Go is pass by value instead of pass by reference
+	->How exceptions are handled in Go
+	->How structs work in Go
+	->How simple it is to make a server in Go
+*Code Samples
+	->Basic syntax such as if else, variable declaration, arrays, etc.
+	->How to easily start a new thread using 'go funcName()'
+	->How to create structs
+	->How to use slices (similar to arrays)
+	->Using addresses and pointers to structs and lists like in C
+	->Simple structure of a basic Go program
+	->How to start a server in Go
+*How to Demo
+	->Run the Chat Room application we are making for the final project
+	->Run small programs in terminal that demonstrate important features of Go
+*How to Shoot it
+	->Use OBS to record running programs in terminal
+	->Use a slide deck for key concepts
