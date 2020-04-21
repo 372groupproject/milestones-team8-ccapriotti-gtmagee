@@ -8,6 +8,8 @@ import (
 )
 
 var serverData ServerData
+var onlineTimer int = 5
+
 
 type ServerData struct {
    AllUsers []User `json:"AllUsers"`
@@ -113,8 +115,14 @@ This method is used for three main purposes:
 Whenever a user makes a request to the server this method is called
 */
 func requestHandler(w http.ResponseWriter, r *http.Request){
+   fmt.Println(len(serverData.AllUsers))
    if r.FormValue("mode") == "getdata"{
       //send back JSON containing all ServerData
+      for i := 0; i < len(serverData.AllUsers); i++{
+         if (serverData.AllUsers[i].Name == r.FormValue("name")){
+            serverData.AllUsers[i].OnlineTimer = onlineTimer;
+         }
+      }
       serverDataJSON, err := json.Marshal(serverData)
       if (err != nil){
          fmt.Println("JSON conversion failed")
@@ -127,7 +135,7 @@ func requestHandler(w http.ResponseWriter, r *http.Request){
       postComment(comment)
    }else if r.FormValue("mode") == "adduser"{
       //add parameterized user to serverData
-      serverData.AllUsers = append(serverData.AllUsers, User{r.FormValue("name"), &serverData.ChatRooms[0], 100})
+      serverData.AllUsers = append(serverData.AllUsers, User{r.FormValue("name"), &serverData.ChatRooms[0], onlineTimer})
    }else {
       //send the html page file
       http.ServeFile(w, r, "../webpageUtility/entryPage.html")

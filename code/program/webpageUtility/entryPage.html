@@ -5,6 +5,7 @@
 		<script>
 			(function() {
 				var username;
+				var currentComments
 
 				function enterChatRooms(){
 					let possName = document.getElementById("nameinput").value;
@@ -13,16 +14,37 @@
 						currRoom = "general"
 						document.getElementById("signin").style.display = "none";
 						document.getElementById("chatmain").style.display = "block";
+						fetch("http://localhost:3000?mode=adduser&name=" + username).then(checkStatus)
+							.then(function(responseText){
+								//successfully received data
+								console.log("Successully joined chat")
+							})
+							.catch(function(error){//error
+								console.log(error)
+							});
 					}
 				}
 
-				function getUsers(){
-					fetch("http://localhost:3000?mode=roomusers").then(checkStatus)
+				function getData(){
+					fetch("http://localhost:3000?mode=getdata&name=" + username).then(checkStatus)
 						.then(function(responseText){
 							//successfully received data
-							let allComments = JSON.parse(responseText)["messages"];
+							let serverJSON = JSON.parse(responseText);
+							console.log(serverJSON)
 						})
 						.catch(function(error){//error
+							console.log(error)
+						});
+				}
+
+				function postComment(){
+					fetch("http://localhost:3000?mode=postcomment&name=" + username + "&comment=" + document.getElementById("commentinput").value).then(checkStatus)
+						.then(function(responseText){
+							//successfully received data
+							console.log("Successfully posted comment")
+						})
+						.catch(function(error){//error
+							console.log(error)
 						});
 				}
 
@@ -35,12 +57,22 @@
 				}
 
 				window.onload = function(){
+
 					document.getElementById("submitname").onclick = enterChatRooms;
 					document.getElementById("nameinput").onkeypress = function(event){
 						if (event.keyCode == 13){
 							enterChatRooms();
 						}
 					}
+
+					document.getElementById("submitcomment").onclick = postComment;
+					document.getElementById("commentinput").onkeypress = function(event){
+						if (event.keyCode == 13){
+							postComment();
+						}
+					}
+					setInterval(getData, 1000)
+
 				};
 			})();
 		</script>
@@ -78,6 +110,13 @@
 					</ul>
 				</div>
 			</div>
+			<h3>Comments:</h3>
+			<div id="commentbox">
+				<ul id="commentlist">
+				</ul>
+			</div>
+			<label>What's on your mind?: <input type="text" id="commentinput" /></label>
+			<button id="submitcomment">Send</button>
 		</div>
 	</body>
 </html>
