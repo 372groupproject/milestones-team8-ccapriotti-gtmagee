@@ -4,17 +4,31 @@
 		<title>Oatmeal Lite</title>
 		<script>
 			(function() {
-				var username
-				var currRoom
+				var username;
+				var currRoom;
 
 				function enterChatRooms(){
-					let possName = document.getElementById("nameinput").value;
+					let possName = document.getElementById("nameinput").value.toLowerCase();
 					if (possName != ""){
-						username = possName;
-						currRoom = "general"
-						document.getElementById("signin").style.display = "none";
-						document.getElementById("chatmain").style.display = "block";
-						fetch("http://localhost:3000?mode=adduser&name=" + username)
+						fetch("http://localhost:3000?mode=validate&name=" + possName).then(checkStatus)
+							.then(function(responseText){
+								//successfully received data
+								let validatorJSON = JSON.parse(responseText);
+								if (validatorJSON.isValid){
+									username = possName;
+									currRoom = "general";
+									document.getElementById("signin").style.display = "none";
+									document.getElementById("chatmain").style.display = "block";
+									fetch("http://localhost:3000?mode=adduser&name=" + username);
+									setInterval(getData, 500);
+								}else{
+									alert("Username Already Taken!");
+									document.getElementById("nameinput").value = "";
+								}
+							})
+							.catch(function(error){//error
+								console.log(error);
+							});
 					}
 				}
 
@@ -23,66 +37,93 @@
 						.then(function(responseText){
 							//successfully received data
 							let serverJSON = JSON.parse(responseText);
-							console.log(serverJSON)
-							let currentComments = getComments(serverJSON.allUsers)
-							console.log(currentComments)
-							let currentRoomUsers = getRoomUsers(serverJSON)
-							let currentAllUsers = serverJSON.allUsers
-							updateLocalPage(currentComments, currentRoomUsers, currentAllUsers)
+							let currentComments = getComments(serverJSON.allUsers);
+							let currentRoomUsers = getRoomUsers(serverJSON);
+							let currentAllUsers = serverJSON.allUsers;
+							let currentRooms = serverJSON.chatRooms
+							updateLocalPage(currentComments, currentRoomUsers, currentAllUsers, currentRooms);
 						})
 						.catch(function(error){//error
-							console.log(error)
+							console.log(error);
 						});
 				}
 
 				function postComment(){
-					fetch("http://localhost:3000?mode=postcomment&name=" + username + "&comment=" + document.getElementById("commentinput").value)
-					document.getElementById("commentinput").value = ""
+					fetch("http://localhost:3000?mode=postcomment&name=" + username + "&comment=" + document.getElementById("commentinput").value);
+					document.getElementById("commentinput").value = "";
 				}
 
 				function getComments(allUsers){
 					for (let i = 0; i < allUsers.length; i++){
 						if (allUsers[i].name == username){
-							currRoom = allUsers[i].currRoom
-							return allUsers[i].currRoom.chat
+							currRoom = allUsers[i].currRoom;
+							return allUsers[i].currRoom.chat;
 						}
 					}
 				}
 
 				function getRoomUsers(serverJSON){
-					let allUsers = serverJSON.allUsers
-					let roomUsers = []
+					let allUsers = serverJSON.allUsers;
+					let roomUsers = [];
 					for (let i = 0; i < allUsers.length; i++){
 						if (allUsers[i].currRoom.name == currRoom.name){
-							roomUsers.push(allUsers[i])
+							roomUsers.push(allUsers[i]);
 						}
 					}
-					return roomUsers
+					return roomUsers;
 				}
 
-				function updateLocalPage(currentComments, currentRoomUsers, currentAllUsers){
-					let commentSection = document.getElementById("commentlist")
-					let allUsersList = document.getElementById("alllist")
-					let roomUsersList = document.getElementById("roomlist")
-					commentSection.innerHTML = ""
-					allUsersList.innerHTML = ""
-					roomUsersList.innerHTML = ""
-					document.getElementById("chatroomtitle").innerHTML = "Currently in Chat Room: <u>" + currRoom.name + "</u>"
+				function updateLocalPage(currentComments, currentRoomUsers, currentAllUsers, currentRooms){
+					let commentSection = document.getElementById("commentlist");
+					let allUsersList = document.getElementById("alllist");
+					let roomUsersList = document.getElementById("roomlist");
+					let availableRoomsList = document.getElementById("availroomlist")
+					commentSection.innerHTML = "";
+					allUsersList.innerHTML = "";
+					roomUsersList.innerHTML = "";
+					availableRoomsList.innerHTML = "";
+					document.getElementById("chatroomtitle").innerHTML = username + " is Currently in Chat Room: <u>" + currRoom.name + "</u>";
 					for (let i = 0; i < currentComments.length; i++){
-						let commentItem = document.createElement("li")
-						commentItem.innerHTML = "<b>" + currentComments[i].person + "</b>: " + currentComments[i].text
-						commentSection.appendChild(commentItem)
+						let commentItem = document.createElement("li");
+						commentItem.innerHTML = "<b>" + currentComments[i].person + "</b>: " + currentComments[i].text;
+						commentSection.appendChild(commentItem);
 					}
 					for (let i = 0; i < currentRoomUsers.length; i++){
-						let roomUserItem = document.createElement("li")
-						roomUserItem.innerHTML = currentRoomUsers[i].name
-						roomUsersList.appendChild(roomUserItem)
+						let roomUserItem = document.createElement("li");
+						roomUserItem.innerHTML = currentRoomUsers[i].name;
+						roomUsersList.appendChild(roomUserItem);
 					}
 					for (let i = 0; i < currentAllUsers.length; i++){
-						let allUserItem = document.createElement("li")
-						allUserItem.innerHTML = currentAllUsers[i].name
-						allUsersList.appendChild(allUserItem)
+						let allUserItem = document.createElement("li");
+						allUserItem.innerHTML = currentAllUsers[i].name;
+						allUsersList.appendChild(allUserItem);
 					}
+					for (let i = 0; i < currentRooms.length; i++){
+						let roomName = currentRooms[i].name
+						let joinButton = document.createElement("button")
+						let deleteButton = document.createElement("button")
+						joinButton.innerHTML = "Join"
+						deleteButton.innerHTML = "Delete"
+						joinButton.onclick = function(){
+							fetch("http://localhost:3000?mode=changeroom&room=" + roomName + "&name=" + username)
+						}
+						deleteButton.onclick = function(){
+							fetch("http://localhost:3000?mode=remove&name=" + roomName)
+						}
+						let label = document.createElement("label")
+						label.innerHTML = roomName + "  "
+						let listItem = document.createElement("li")
+						listItem.appendChild(label)
+						listItem.appendChild(joinButton)
+						listItem.appendChild(deleteButton)
+						availableRoomsList.appendChild(listItem)
+					}
+				}
+
+				function createRoom(){
+					let nameBox = document.getElementById("createroominput");
+					fetch("http://localhost:3000?mode=create&name=" + nameBox.value.toLowerCase())
+					nameBox.value = ""
 				}
 
 				function checkStatus(response){
@@ -108,8 +149,13 @@
 							postComment();
 						}
 					}
-					setInterval(getData, 100)
 
+					document.getElementById("createroombutton").onclick = createRoom;
+					document.getElementById("createroominput").onkeypress = function(event){
+						if (event.keyCode == 13){
+							createRoom();
+						}
+					}
 				};
 			})();
 		</script>
@@ -119,14 +165,14 @@
 				justify-content: center;
 				margin-left: auto;
 				margin-right: auto;
-				width: 30%;
+				width: 60%;
 				border: 2px solid black;
-				height: 150px;
+				height: 200px;
 				overflow-y: scroll;
 			}
 
 			#users div{
-				margin: 10px;
+				margin: 20px;
 			}
 
 			#commentbox {
@@ -138,8 +184,11 @@
 				border: 2px solid black;
 			}
 
-			ul {
+			#commentbox li {
 				list-style-type: none;
+			}
+
+			ul {
 				text-align: left;
 			}
 
@@ -155,9 +204,11 @@
 				text-align: center;
 			}
 
-			#signin, #commentpostsection {
+			#signin, #commentpostsection, #commentbox {
 				margin-top: 30px;
 			}
+
+
 		</style>
 	</head>
 	<body>
@@ -167,7 +218,9 @@
 			<button id="submitname">Get Started!</button>
 		</div>
 		<div id="chatmain" class="hidden">
-			<h2 id="chatroomtitle">Currently in Chat Room: </h2>
+			<h2 id="chatroomtitle"></h2>
+			<label>Create a Chat Room Called: <input type="text" id="createroominput" /></label>
+			<button id="createroombutton">Send</button>
 			<div id="users">
 				<div id="roomusers">
 					<h3>Users in Room:</h3>
@@ -179,8 +232,12 @@
 					<ul id="alllist">
 					</ul>
 				</div>
+				<div id="roomshowcase">
+					<h3>Available Rooms</h3>
+					<ul id="availroomlist">
+					</ul>
+				</div>
 			</div>
-			<h3>Live Chat:</h3>
 			<div id="commentbox">
 				<ul id="commentlist">
 				</ul>
