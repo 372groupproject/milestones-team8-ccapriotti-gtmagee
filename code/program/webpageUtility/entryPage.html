@@ -4,8 +4,8 @@
 		<title>Oatmeal Lite</title>
 		<script>
 			(function() {
-				var username;
-				var currentComments
+				var username
+				var currRoom
 
 				function enterChatRooms(){
 					let possName = document.getElementById("nameinput").value;
@@ -14,14 +14,7 @@
 						currRoom = "general"
 						document.getElementById("signin").style.display = "none";
 						document.getElementById("chatmain").style.display = "block";
-						fetch("http://localhost:3000?mode=adduser&name=" + username).then(checkStatus)
-							.then(function(responseText){
-								//successfully received data
-								console.log("Successully joined chat")
-							})
-							.catch(function(error){//error
-								console.log(error)
-							});
+						fetch("http://localhost:3000?mode=adduser&name=" + username)
 					}
 				}
 
@@ -31,6 +24,11 @@
 							//successfully received data
 							let serverJSON = JSON.parse(responseText);
 							console.log(serverJSON)
+							let currentComments = getComments(serverJSON.allUsers)
+							console.log(currentComments)
+							let currentRoomUsers = getRoomUsers(serverJSON)
+							let currentAllUsers = serverJSON.allUsers
+							updateLocalPage(currentComments, currentRoomUsers, currentAllUsers)
 						})
 						.catch(function(error){//error
 							console.log(error)
@@ -38,14 +36,53 @@
 				}
 
 				function postComment(){
-					fetch("http://localhost:3000?mode=postcomment&name=" + username + "&comment=" + document.getElementById("commentinput").value).then(checkStatus)
-						.then(function(responseText){
-							//successfully received data
-							console.log("Successfully posted comment")
-						})
-						.catch(function(error){//error
-							console.log(error)
-						});
+					fetch("http://localhost:3000?mode=postcomment&name=" + username + "&comment=" + document.getElementById("commentinput").value)
+					document.getElementById("commentinput").value = ""
+				}
+
+				function getComments(allUsers){
+					for (let i = 0; i < allUsers.length; i++){
+						if (allUsers[i].name == username){
+							currRoom = allUsers[i].currRoom
+							return allUsers[i].currRoom.chat
+						}
+					}
+				}
+
+				function getRoomUsers(serverJSON){
+					let allUsers = serverJSON.allUsers
+					let roomUsers = []
+					for (let i = 0; i < allUsers.length; i++){
+						if (allUsers[i].currRoom.name == currRoom.name){
+							roomUsers.push(allUsers[i])
+						}
+					}
+					return roomUsers
+				}
+
+				function updateLocalPage(currentComments, currentRoomUsers, currentAllUsers){
+					let commentSection = document.getElementById("commentlist")
+					let allUsersList = document.getElementById("alllist")
+					let roomUsersList = document.getElementById("roomlist")
+					commentSection.innerHTML = ""
+					allUsersList.innerHTML = ""
+					roomUsersList.innerHTML = ""
+					document.getElementById("chatroomtitle").innerHTML = "Currently in Chat Room: <u>" + currRoom.name + "</u>"
+					for (let i = 0; i < currentComments.length; i++){
+						let commentItem = document.createElement("li")
+						commentItem.innerHTML = "<b>" + currentComments[i].person + "</b>: " + currentComments[i].text
+						commentSection.appendChild(commentItem)
+					}
+					for (let i = 0; i < currentRoomUsers.length; i++){
+						let roomUserItem = document.createElement("li")
+						roomUserItem.innerHTML = currentRoomUsers[i].name
+						roomUsersList.appendChild(roomUserItem)
+					}
+					for (let i = 0; i < currentAllUsers.length; i++){
+						let allUserItem = document.createElement("li")
+						allUserItem.innerHTML = currentAllUsers[i].name
+						allUsersList.appendChild(allUserItem)
+					}
 				}
 
 				function checkStatus(response){
@@ -71,12 +108,41 @@
 							postComment();
 						}
 					}
-					setInterval(getData, 1000)
+					setInterval(getData, 100)
 
 				};
 			})();
 		</script>
 		<style>
+			#users {
+				display: flex;
+				justify-content: center;
+				margin-left: auto;
+				margin-right: auto;
+				width: 30%;
+				border: 2px solid black;
+				height: 150px;
+				overflow-y: scroll;
+			}
+
+			#users div{
+				margin: 10px;
+			}
+
+			#commentbox {
+				margin-left: auto;
+				margin-right: auto;
+				width: 50%;
+				height: 300px;
+				overflow-y: scroll;
+				border: 2px solid black;
+			}
+
+			ul {
+				list-style-type: none;
+				text-align: left;
+			}
+
 			.hidden {
 				display: none;
 			}
@@ -88,35 +154,41 @@
 			body {
 				text-align: center;
 			}
+
+			#signin, #commentpostsection {
+				margin-top: 30px;
+			}
 		</style>
 	</head>
 	<body>
+		<h1>Welcome to the Discussion</h1>
 		<div id="signin" class="shown">
 			<label>Name: <input type="text" id="nameinput" /></label>
 			<button id="submitname">Get Started!</button>
 		</div>
 		<div id="chatmain" class="hidden">
-			<h1>Welcome to the Discussion</h1>
-			<h2>Currently in Chat Room: </h2>
+			<h2 id="chatroomtitle">Currently in Chat Room: </h2>
 			<div id="users">
 				<div id="roomusers">
-					<h3>Users in Room: </h3>
+					<h3>Users in Room:</h3>
 					<ul id="roomlist">
 					</ul>
 				</div>
 				<div id="allusers">
-					<h3>All Users Online: </h3>
+					<h3>All Users Online:</h3>
 					<ul id="alllist">
 					</ul>
 				</div>
 			</div>
-			<h3>Comments:</h3>
+			<h3>Live Chat:</h3>
 			<div id="commentbox">
 				<ul id="commentlist">
 				</ul>
 			</div>
-			<label>What's on your mind?: <input type="text" id="commentinput" /></label>
-			<button id="submitcomment">Send</button>
+			<div id="commentpostsection">
+				<label>What's on your mind?: <input type="text" id="commentinput" /></label>
+				<button id="submitcomment">Send</button>
+			</div>
 		</div>
 	</body>
 </html>

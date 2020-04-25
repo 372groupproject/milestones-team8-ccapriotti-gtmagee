@@ -12,7 +12,7 @@ var onlineTimer int = 5
 
 
 type ServerData struct {
-   AllUsers []User `json:"AllUsers"`
+   AllUsers []User `json:"allUsers"`
    ChatRooms []Room `json:"chatRooms"`
 }
 
@@ -39,7 +39,7 @@ operations. Every second, the list of all the users held in
 serverData is gone through and their OnlineTimer is decremented
 by 1.  Once a user's OnlineTimer is at 0, they are taken off
 from the list of users: they are no longer online. This OnlineTimer
-is reset to 5 everytime a user makes a get request to the server.
+is reset to 2 everytime a user makes a get request to the server.
 */
 func startClock(){
    for true {
