@@ -143,3 +143,71 @@ Example of structs in Go.
 A console based tic-tac-toe game created usign a combination of Go's data types. 
 
 ---
+
+### p4
+
+#### course.go	
+
+Example of how OOP works in Go using structs and packages (see p4_packages.go).
+
+---
+
+#### student.go	
+
+Student "class" for our mildly useful grades program.
+
+---
+
+#### p4_function.go	
+
+Go's function syntax! 
+
+---
+
+#### p4_goroutine.go	
+
+Concurrency in Go!
+
+---
+
+#### p4_grades.go	
+
+Our mildly useful program that prompts a user to enter student information and then allows them to get the average/highest grades 
+---
+
+#### p4_packages.go	
+
+Example of how packages can be used in Go (see course.go).
+---
+
+### p5
+
+#### p5_channels.go	
+
+Example of how channels can be used to capture goroutine function call output.
+
+---
+
+#### p5_pointers.go	
+
+Yes, Go has pointers.
+
+---
+
+#### p5_swap.go	
+
+Example of how to do a simple swap in Go without a temporary variable. I just thought it was neat.
+
+---
+
+#### p5_testing.go	
+
+Go has built-in testing! (run "go test" in the p5 directory)
+
+---
+
+#### p5_testing_test.go	
+
+Test file for p5_testing.go
+
+---
