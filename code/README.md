@@ -173,11 +173,13 @@ Concurrency in Go!
 #### p4_grades.go	
 
 Our mildly useful program that prompts a user to enter student information and then allows them to get the average/highest grades 
+
 ---
 
 #### p4_packages.go	
 
 Example of how packages can be used in Go (see course.go).
+
 ---
 
 ### p5
