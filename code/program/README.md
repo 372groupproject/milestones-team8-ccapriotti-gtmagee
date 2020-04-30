@@ -1,4 +1,6 @@
-To run this program, enter the following command in 'Windows Powershell' or terminal in the same folder as chatServer.go:
+First, install Go. You can google it or download it here: https://golang.org/dl/
+
+To run this program, open "Windows Powershell" or terminal. cd (change directory) into the same directory as chatServer.go and enter the following command:
 
 go run chatServer.go
 
@@ -8,6 +10,6 @@ You can connect to this server by opening a web browser and typing in:
 
 localhost:3000
 
-This is the start of the chat room.
+This is the the chat room.
 
 You can simulate multiple users connecting to the chat room by opening multiple tabs, each of which connect to localhost:3000.
