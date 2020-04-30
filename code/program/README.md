@@ -4,7 +4,7 @@ To run this program, open "Windows Powershell" or terminal. cd (change directory
 
 go run chatServer.go
 
-This will start the server.
+This will start the server (This might take a while to do).
 
 You can connect to this server by opening a web browser and typing in:
 
