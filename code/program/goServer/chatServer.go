@@ -1,3 +1,14 @@
+/*
+Authors: Christian Capriotti
+         Gavin Magee
+
+Running this file using 'go run chatServer.go' will
+start the server that can be connected to by going
+to 'localhost:3000' on your computer (in your web browser).
+
+Dependencies: entryPage.html
+*/
+
 package main
 
 import (
@@ -74,21 +85,32 @@ func postComment(comment Comment){
    }
 }
 
+/*
+This function is designed to add a new chat room
+to the list of chat rooms in serverData.  The name of the added
+chat room is the parameter roomName
+
+If the chatroom name already exists, it is not created.
+
+Parameter: roomName is a string representing the room to be deleted
+*/
 func createChatRoom(roomName string){
    alreadyExists := false
    for i := 0; i < len(serverData.ChatRooms) && !alreadyExists; i++ {
+      //check to see if the chat room already exists
       if roomName == serverData.ChatRooms[i].Name {
          alreadyExists = true
       }
    }
    if !alreadyExists {
+      //create a new chat room if one doesnt already exist
       serverData.ChatRooms = append(serverData.ChatRooms,
        Room{roomName, []Comment{Comment{"server", "Welcome to " + roomName + " Chat!"}}})
 
-      
       for i := 0; i < len(serverData.AllUsers); i++ {
          for j := 0; j < len(serverData.ChatRooms); j++{
             if ((*(serverData.AllUsers[i].CurrRoom)).Name == serverData.ChatRooms[j].Name){
+               //update the current chat rooms of the users
                serverData.AllUsers[i].CurrRoom = &(serverData.ChatRooms[j])
             }
          }
@@ -96,6 +118,17 @@ func createChatRoom(roomName string){
    }
 }
 
+/*
+This function deletes the chat room with the given name
+from the list of chatRooms under serverData.
+
+If the room to be deleted doesn't exist, nothing happens
+
+Any users in the deleted room are moved to general, which
+can never be deleted.
+
+Parameter: roomName is a string representing the chat room to be deleted
+*/
 func removeChatRoom(roomName string){
    if (roomName != "general"){
       var newRooms []Room
@@ -116,6 +149,7 @@ func removeChatRoom(roomName string){
       for i := 0; i < len(serverData.AllUsers); i++ {
          for j := 0; j < len(serverData.ChatRooms); j++{
             if ((*(serverData.AllUsers[i].CurrRoom)).Name == serverData.ChatRooms[j].Name){
+               //update the current rooms of the users
                serverData.AllUsers[i].CurrRoom = &(serverData.ChatRooms[j])
             }
          }
@@ -123,6 +157,16 @@ func removeChatRoom(roomName string){
    }
 }
 
+/*
+This function returns whether or not the suggested username
+is valid
+
+A username is valid if it does not already belong to another user.
+
+Parameter: possName is a string of the potential username someone connects with
+
+Return: a boolean on whether or not the username is valid (not already existing)
+*/
 func isValid(possName string) bool {
    for i := 0; i < len(serverData.AllUsers); i++{
       if (possName == serverData.AllUsers[i].Name){
@@ -132,6 +176,15 @@ func isValid(possName string) bool {
    return true
 }
 
+/*
+This method resets the OnlineTimer of the user
+with the same name as the passed in string.
+
+Parameter: accessor is a string of the name of the user
+who just made a request to the server. This means that
+they are online and their online timer should be reset
+to 5.
+*/
 func updateUser(accessor string){
    for i := 0; i < len(serverData.AllUsers); i++{
       if serverData.AllUsers[i].Name == accessor{
@@ -140,6 +193,20 @@ func updateUser(accessor string){
    }
 }
 
+/*
+This function moves the user from the room they are currently
+in to the rroom specified by the 'room' parameter. This change
+is seen in serverData
+
+Parameters: 
+   #
+      room is a string representation of the chat room the
+      user is moving into
+   #
+      name is a string of the user who is moving rooms
+
+
+*/
 func moveRooms(room string, name string){
    var newRoom *Room
    for i := 0; i < len(serverData.ChatRooms); i++{
