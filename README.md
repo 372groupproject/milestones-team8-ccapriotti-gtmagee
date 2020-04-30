@@ -3,6 +3,10 @@
 * Authors: Christian Capriotti & Gavin Magee 
 * Language: https://golang.org/
 
+## Video
+
+* https://www.youtube.com/watch?v=nqxNUKDFodk
+
 ## References
 
 * Online Resouces:
